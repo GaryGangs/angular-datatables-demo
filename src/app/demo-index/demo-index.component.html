@@ -24,12 +24,13 @@
   <div class="content" role="main">
   <!-- 5 texts-->
   <form [formGroup]="claimForm" (ngSubmit)="onFormSubmit()">
-
+    <form [formGroup]="claimNumberForm">
   <div class="card card-small">
   
-    <input type="text"  formControlName="claimNumber" class="form-control" placeholder="Claim Number">
+    <input type="text"  formControlName="claimNumber" class="form-control" placeholder="Claim Number" (keyup)="disableOtherFields(claimNumber.value)">
 
 </div>
+</form>
 <!-- <div class="card card-small">
   
   <input type="text" #titleInput class="form-control" placeholder="Date">
@@ -62,10 +63,12 @@
   formControlName="renderingNpi" class="form-control" placeholder="Rendering NPI">
 
 </div>
+<form [formGroup]="checkBoxForm" >
 <div class="card card-small">
   <input type="checkbox"  formControlName="showFilter"  placeholder="ShowFilter" (change)="onChangeFilter(showFilter.value)">
   <input type="checkbox" formControlName="showFilterAll"  placeholder="ShowFilterAll" (change)="onChangeFilterAll(showFilterAll.value)">
 </div>
+</form>
 <form [formGroup]="claimInnerForm" (ngSubmit)="onFormSubmit()">
 <div *ngIf="showFilter.value || showFilterAll.value">
   <div class="card card-small">

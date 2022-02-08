@@ -22,6 +22,8 @@ export class DemoIndexComponent implements  OnInit {
   
   claimForm:FormGroup
   claimInnerForm:FormGroup
+  checkBoxForm:FormGroup
+  claimNumberForm:FormGroup
 
   // material table section...
 
@@ -43,10 +45,10 @@ export class DemoIndexComponent implements  OnInit {
    return this.claimForm.get('renderingNpi');
  }
 get showFilter() {
-  return this.claimForm.get('showFilter')
+  return this.checkBoxForm.get('showFilter')
 }
 get showFilterAll() {
-  return this.claimForm.get('showFilterAll')
+  return this.checkBoxForm.get('showFilterAll')
 }
 get showFilter2() {
   return  this.claimInnerForm.get('showFilter2')
@@ -57,31 +59,46 @@ get filter1 () {
 get filter2 () {
   return this.claimInnerForm.get('filter2')
 }
+get claimNumber () {
+  return this.claimNumberForm.get('claimNumber')
+}
+
 onChangeFilter(val) {
   if (val===false) {
     console.log('h')
     this.claimInnerForm.reset()
   } else {
-    this.claimForm.get('showFilterAll').reset()
+    this.checkBoxForm.get('showFilterAll').reset()
     this.claimInnerForm.get('showFilter2').reset()
   }
 }
+disableOtherFields(val) {
+  console.log(val)
+  if(val!== ''){
+  this.claimInnerForm.disable()
+  this.claimForm.disable()
+  } else {
+    this.claimInnerForm.enable()
+  this.claimForm.enable()
+  }
+}
+
 onChangeFilter2(val) {
   if (val===false) {
     console.log('h',val)
     this.claimInnerForm.reset()
   } else {
-    this.claimForm.get('showFilterAll').reset()
+    this.checkBoxForm.get('showFilterAll').reset()
   } 
 }
 onChangeFilterAll(val) {
   if (val) {
     console.log('h',val)
-    this.claimForm.get('showFilter').reset()
+    this.checkBoxForm.get('showFilter').reset()
     this.claimInnerForm.get('showFilter2').reset()
   } else {
     debugger
-    this.claimForm.get('showFilter').setValue(true)
+    this.checkBoxForm.get('showFilter').setValue(true)
     this.claimInnerForm.get('showFilter2').setValue(true)
   }
 }
@@ -110,9 +127,16 @@ onChangeFilterAll(val) {
       mediclaidId : new FormControl("",[Validators.minLength(10)]),
       billingTin: new FormControl(null,[Validators.minLength(10)]),
       renderingNpi: new FormControl(null,[Validators.minLength(10)]),
+      
+      
+    })
+    this.claimNumberForm=new FormGroup({
+      claimNumber:new FormControl(null)
+      
+    })
+    this.checkBoxForm = new FormGroup({
       showFilter: new FormControl(false),
       showFilterAll: new FormControl(false)
-      
     })
     this.claimInnerForm = new FormGroup({
       showFilter2: new FormControl(false),
