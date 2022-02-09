@@ -117,15 +117,16 @@ disableOtherFields(val) { // New
   console.log(val,this.claimNumberForm.get('claimNumbers').value)
 let claimNos = this.claimNumberForm.get('claimNumbers').value
   if(claimNos && claimNos.length > 0) {
-    claimNos.forEach(element => {
+    for(let element of claimNos){
       if(element.claimNumber !== '') {
         this.claimInnerForm.disable()
         this.claimForm.disable()
+        break
       }else {
         this.claimInnerForm.enable()
       this.claimForm.enable()
       }
-    });
+    }
   }
 }
 private createClaimNoFormGroup(): FormGroup{
@@ -135,7 +136,9 @@ private createClaimNoFormGroup(): FormGroup{
 }
 public addClaimNoFormGroup() {
   const claimNos = this.claimNumberForm.get('claimNumbers') as FormArray
+  if(claimNos.length < 5) {
   claimNos.push(this.createClaimNoFormGroup())
+  }
 }
 public removeOrClearclaimNo(i: number) {
   const claimNos = this.claimNumberForm.get('claimNumbers') as FormArray

@@ -30,11 +30,11 @@
     [formGroupName]="i">
     <input type="text"  formControlName="claimNumber" class="form-control" placeholder="Claim Number" (keyup)="disableOtherFields(claimNumber.value)">
     <button class="float-left" mat-icon-button color="primary" aria-label="Remove/clear"
-    (click)="addClaimNoFormGroup()" matTooltip="Remove">
+    (click)="addClaimNoFormGroup()" matTooltip="Remove" *ngIf="i===0">
   +
 </button>
 <button class="float-left" mat-icon-button color="primary" aria-label="Add"
-    (click)="removeOrClearclaimNo(i)" matTooltip="Add">
+    (click)="removeOrClearclaimNo(i)" matTooltip="Add" *ngIf="i>0">
   -
 </button>  
   </div>
