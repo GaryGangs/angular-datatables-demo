@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import {DemoServiceService} from '../demo-service.service';
-import { FormGroup,FormControl, Validators } from '@angular/forms';
+import { FormGroup,FormControl, Validators,FormBuilder,FormArray } from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 
@@ -23,7 +23,7 @@ export class DemoIndexComponent implements  OnInit {
   claimForm:FormGroup
   claimInnerForm:FormGroup
   checkBoxForm:FormGroup
-  claimNumberForm:FormGroup
+  claimNumberForm:FormGroup // New
 
   // material table section...
 
@@ -33,7 +33,7 @@ export class DemoIndexComponent implements  OnInit {
   @ViewChild('claimPaginator', { read: MatPaginator })
   paginator!: MatPaginator;
   //...........................
-  constructor(private service:DemoServiceService) {}
+  constructor(private service:DemoServiceService, private fb:FormBuilder) {}
 
   get billingTin() {
     return this.claimForm.get('billingTin');
@@ -59,7 +59,7 @@ get filter1 () {
 get filter2 () {
   return this.claimInnerForm.get('filter2')
 }
-get claimNumber () {
+get claimNumber () { // New
   return this.claimNumberForm.get('claimNumber')
 }
 
@@ -72,16 +72,7 @@ onChangeFilter(val) {
     this.claimInnerForm.get('showFilter2').reset()
   }
 }
-disableOtherFields(val) {
-  console.log(val)
-  if(val!== ''){
-  this.claimInnerForm.disable()
-  this.claimForm.disable()
-  } else {
-    this.claimInnerForm.enable()
-  this.claimForm.enable()
-  }
-}
+
 
 onChangeFilter2(val) {
   if (val===false) {
@@ -121,6 +112,42 @@ onChangeFilterAll(val) {
   }
   
 }
+// New section
+disableOtherFields(val) { // New
+  console.log(val,this.claimNumberForm.get('claimNumbers').value)
+let claimNos = this.claimNumberForm.get('claimNumbers').value
+  if(claimNos && claimNos.length > 0) {
+    claimNos.forEach(element => {
+      if(element.claimNumber !== '') {
+        this.claimInnerForm.disable()
+        this.claimForm.disable()
+      }else {
+        this.claimInnerForm.enable()
+      this.claimForm.enable()
+      }
+    });
+  }
+}
+private createClaimNoFormGroup(): FormGroup{
+  return new FormGroup({
+    'claimNumber': new FormControl('')
+  })
+}
+public addClaimNoFormGroup() {
+  const claimNos = this.claimNumberForm.get('claimNumbers') as FormArray
+  claimNos.push(this.createClaimNoFormGroup())
+}
+public removeOrClearclaimNo(i: number) {
+  const claimNos = this.claimNumberForm.get('claimNumbers') as FormArray
+  if (claimNos.length > 1) {
+    claimNos.removeAt(i)
+  } else {
+    claimNos.reset()
+  }
+}
+getClaimNoControls() {
+  return (this.claimNumberForm.get('claimNumbers') as FormArray).controls;
+}
   ngOnInit() {
     this.claimForm=new FormGroup({
       claimNumber:new FormControl(null),
@@ -131,7 +158,7 @@ onChangeFilterAll(val) {
       
     })
     this.claimNumberForm=new FormGroup({
-      claimNumber:new FormControl(null)
+      claimNumbers:this.fb.array([this.createClaimNoFormGroup()])
       
     })
     this.checkBoxForm = new FormGroup({

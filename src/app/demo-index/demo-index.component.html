@@ -25,10 +25,20 @@
   <!-- 5 texts-->
   <form [formGroup]="claimForm" (ngSubmit)="onFormSubmit()">
     <form [formGroup]="claimNumberForm">
-  <div class="card card-small">
-  
+  <div formArrayName="claimNumbers">
+    <div class="card card-small"  *ngFor="let claimNumber of getClaimNoControls(); let i = index"
+    [formGroupName]="i">
     <input type="text"  formControlName="claimNumber" class="form-control" placeholder="Claim Number" (keyup)="disableOtherFields(claimNumber.value)">
-
+    <button class="float-left" mat-icon-button color="primary" aria-label="Remove/clear"
+    (click)="addClaimNoFormGroup()" matTooltip="Remove">
+  +
+</button>
+<button class="float-left" mat-icon-button color="primary" aria-label="Add"
+    (click)="removeOrClearclaimNo(i)" matTooltip="Add">
+  -
+</button>  
+  </div>
+    
 </div>
 </form>
 <!-- <div class="card card-small">
