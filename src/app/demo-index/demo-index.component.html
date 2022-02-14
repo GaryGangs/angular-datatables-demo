@@ -30,7 +30,7 @@
     [formGroupName]="i">
     <input type="text"  formControlName="claimNumber" class="form-control" placeholder="Claim Number" (keyup)="disableOtherFields(claimNumber.value)">
     <button class="float-left" mat-icon-button color="primary" aria-label="Remove/clear"
-    (click)="addClaimNoFormGroup()" matTooltip="Remove" *ngIf="i===0">
+    (click)="addClaimNoFormGroup()" matTooltip="Remove" *ngIf="i===0 && getMediclaidIdControls().length <2">
   +
 </button>
 <button class="float-left" mat-icon-button color="primary" aria-label="Add"
@@ -46,7 +46,9 @@
   <input type="text" #titleInput class="form-control" placeholder="Date">
 
 </div> -->
-<div class="card card-small">
+<div formArrayName="mediclaidIds">
+<div class="card card-small"  *ngFor="let mediclaidId of getMediclaidIdControls(); let i = index"
+[formGroupName]="i">
   
   <input type="text" 
   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -55,6 +57,15 @@
  
 <div *ngIf="mediclaidId.errors?.minlength">
   Invalid Id. Must be 10 characters.
+</div>
+<button class="float-left" mat-icon-button color="primary" aria-label="Remove/clear"
+(click)="addMediclaidIdFormGroup()" matTooltip="Remove" *ngIf="i===0">
++
+</button>
+<button class="float-left" mat-icon-button color="primary" aria-label="Add"
+(click)="removeOrClearMediclaidId(i)" matTooltip="Add" *ngIf="i>0">
+-
+</button> 
 </div>
 </div>
 <div class="card card-small">

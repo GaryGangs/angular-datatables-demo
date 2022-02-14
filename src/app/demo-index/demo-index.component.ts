@@ -115,12 +115,18 @@ onChangeFilterAll(val) {
 // New section
 disableOtherFields(val) { // New
   console.log(val,this.claimNumberForm.get('claimNumbers').value)
+  let demoData = []
+  for(let claimNo of this.claimNumberForm.get('claimNumbers').value){
+    demoData.push(claimNo.claimNumber)
+  }
+  console.log('array',demoData)
 let claimNos = this.claimNumberForm.get('claimNumbers').value
   if(claimNos && claimNos.length > 0) {
     for(let element of claimNos){
       if(element.claimNumber !== '') {
         this.claimInnerForm.disable()
         this.claimForm.disable()
+        //this.claimForm.get('mediclaidIds').disable()
         break
       }else {
         this.claimInnerForm.enable()
@@ -132,6 +138,11 @@ let claimNos = this.claimNumberForm.get('claimNumbers').value
 private createClaimNoFormGroup(): FormGroup{
   return new FormGroup({
     'claimNumber': new FormControl('')
+  })
+}
+private createMediclaidIdFormGroup(): FormGroup{
+  return new FormGroup({
+    'mediclaidId': new FormControl("",[Validators.minLength(10)])
   })
 }
 public addClaimNoFormGroup() {
@@ -148,13 +159,31 @@ public removeOrClearclaimNo(i: number) {
     claimNos.reset()
   }
 }
+
+public addMediclaidIdFormGroup() {
+  const claimNos = this.claimForm.get('mediclaidIds') as FormArray
+  if(claimNos.length < 5) {
+  claimNos.push(this.createMediclaidIdFormGroup())
+  }
+}
+public removeOrClearMediclaidId(i: number) {
+  const claimNos = this.claimForm.get('mediclaidIds') as FormArray
+  if (claimNos.length > 1) {
+    claimNos.removeAt(i)
+  } else {
+    claimNos.reset()
+  }
+}
+getMediclaidIdControls() {
+  return (this.claimForm.get('mediclaidIds') as FormArray).controls;
+}
 getClaimNoControls() {
   return (this.claimNumberForm.get('claimNumbers') as FormArray).controls;
 }
   ngOnInit() {
     this.claimForm=new FormGroup({
       claimNumber:new FormControl(null),
-      mediclaidId : new FormControl("",[Validators.minLength(10)]),
+      mediclaidIds : this.fb.array([this.createMediclaidIdFormGroup()]),
       billingTin: new FormControl(null,[Validators.minLength(10)]),
       renderingNpi: new FormControl(null,[Validators.minLength(10)]),
       
